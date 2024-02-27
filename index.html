@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cocaleros - Daily randomizer</title>
+    <link rel="stylesheet" type="text/css" href="resources/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
@@ -46,7 +47,7 @@
                 </tr>
               </tbody>
         </table>
-        <div id="gifContainer"></div>
+        <div id="gifContainer" @click="reloadGifContainer"></div>
 </v-container>
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
 
@@ -88,6 +89,11 @@
                 ]
             },
             methods: {
+                reloadGifContainer() {
+                    let gifContainer = document.getElementById('gifContainer');
+                    gifContainer.innerHTML = '';
+                    this.getGifs();
+                },
                 getGifs: function(event) {
                     let gifUrl = this.checkDay(event)
                     .then(response => response.json())
@@ -97,9 +103,9 @@
                         let gif = data.data[randomIndex].images.original.url;
                         let img = document.createElement('img');
                         img.src = gif;
+                        img.classList.add('margin');
                         img.classList.add('animated-image');
                         img.classList.add('container');
-                        img.classList.add('margin');
                         img.width = 300;
                         img.height = 300;
                         gifContainer.appendChild(img);
@@ -113,9 +119,10 @@
                     let today = new Date();
                     let day = today.getDay();
                     if(day==5){
+                        //It's friday baby! 😍😍😍
                         return fetch('https://api.giphy.com/v1/gifs/search?q=Its+friday&api_key=Pu520AataQOyWkSY21Au4EfCVIX8OSwm');
                     }else {
-                        return fetch('https://api.giphy.com/v1/gifs/search?q=good+morning&api_key=Pu520AataQOyWkSY21Au4EfCVIX8OSwm');
+                        return fetch('https://api.giphy.com/v1/gifs/search?q=marvel+good+morning&api_key=Pu520AataQOyWkSY21Au4EfCVIX8OSwm');
                     }
                 },
                 changeActive: function(event){
@@ -195,7 +202,7 @@
                     });
                     this.rowsCreated=arrayAux;
                 }else{
-                    fetch('https://adrygll2.github.io/people.json')
+                    fetch('https://adrygll2.github.io/resources/data/people.json')
                         .then(response => response.json())
                         .then(data => {
                             let names=this.shuffle(data);
@@ -218,33 +225,5 @@
         //var emojis = ['🐵','🐒','🙈','🙉','🙊'];
 
     </script>
-    <style>
-        @keyframes fadeOut {
-            100% {opacity: 1;}
-            0% {opacity: 0;}
-        }
-
-        @keyframes fadeIn {
-            0% {opacity: 0;}
-            100% {opacity: 1;}
-        }
-
-        .fade-out {
-            animation: fadeOut 5s ease-out;
-        }
-        .animated-image {
-            animation: fadeIn 3s ease-in-out;
-        }
-
-        .container {
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .margin {
-            margin-left: 80px;
-            margin-top: 25px;
-        }
-    </style>
 </body>
 </html>
